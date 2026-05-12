@@ -1,0 +1,82 @@
+#include <stdio.h>
+
+void insertionSortSmall(int arr[], int left, int right) {
+    int i, j, current;
+
+    for (i = left + 1; i <= right; i++) {
+        current = arr[i];
+        j = i - 1;
+
+        while (j >= left && arr[j] > current) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+
+        arr[j + 1] = current;
+    }
+}
+
+void merge(int arr[], int left, int mid, int right) {
+    int temp[100];
+    int i = left;
+    int j = mid + 1;
+    int k = left;
+    int x;
+
+    while (i <= mid && j <= right) {
+        if (arr[i] < arr[j]) {
+            temp[k] = arr[i];
+            i++;
+        } else {
+            temp[k] = arr[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i <= mid) {
+        temp[k] = arr[i];
+        i++;
+        k++;
+    }
+
+    while (j <= right) {
+        temp[k] = arr[j];
+        j++;
+        k++;
+    }
+
+    for (x = left; x <= right; x++) {
+        arr[x] = temp[x];
+    }
+}
+
+void hybridSort(int arr[], int left, int right, int k) {
+    int mid;
+
+    if (right - left + 1 <= k) {
+        insertionSortSmall(arr, left, right);
+    } else {
+        mid = (left + right) / 2;
+
+        hybridSort(arr, left, mid, k);
+        hybridSort(arr, mid + 1, right, k);
+
+        merge(arr, left, mid, right);
+    }
+}
+
+int main() {
+    int arr[] = {39, 9, 81, 45, 90, 27, 72, 18};
+    int size = 8;
+    int k = 2;
+    int i;
+
+    hybridSort(arr, 0, size - 1, k);
+
+    for (i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    return 0;
+}
